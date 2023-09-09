@@ -22,15 +22,22 @@ function App() {
   }, []);
 
   const apiTesting = () => {
-    fetchDataFromApi("/movie/popular").then((res) => {
+    fetchDataFromApi(
+      `/configuration?api_key=${"9647edf2e16e10bf8133acf7cb83f6c5"}`
+    ).then((res) => {
       console.log(res);
-      dispatch(getApiConfigurations(res));
+      const url = {
+        backdrop: res.images.secure_base_url + "original",
+        poster: res.images.secure_base_url + "original",
+        profile: res.images.secure_base_url + "original",
+      };
+      dispatch(getApiConfigurations(url));
     });
   };
 
   return (
     <BrowserRouter>
-      {/* <Header /> */}
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:mediaType/:id" element={<Details />} />
@@ -38,7 +45,7 @@ function App() {
         <Route path="/explore/:mediaType" element={<Explore />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
-      {/* <Footer /> */}
+      <Footer />
     </BrowserRouter>
   );
 }
