@@ -11,6 +11,8 @@ import ContentWrapper from "../../components/contentWrapper/ContentWrapper";
 import MovieCard from "../../components/movieCard/MovieCard";
 import Spinner from "../../components/spinner/Spinner";
 
+const api_key = "9647edf2e16e10bf8133acf7cb83f6c5";
+
 let filters = {};
 
 const sortbyData = [
@@ -34,31 +36,36 @@ const Explore = () => {
   const [sortby, setSortby] = useState(null);
   const { mediaType } = useParams();
 
-  const { data: genresData } = useFetch(`/genre/${mediaType}/list`);
+  const { data: genresData } = useFetch(
+    `/genre/${mediaType}/list?api_key=${api_key}`
+  );
 
   const fetchInitialData = () => {
     setLoading(true);
-    fetchDataFromApi(`/discover/${mediaType}`, filters).then((res) => {
-      setData(res);
-      setPageNum((prev) => prev + 1);
-      setLoading(false);
-    });
+    fetchDataFromApi(`/discover/${mediaType}?api_key=${api_key}`, filters).then(
+      (res) => {
+        setData(res);
+        setPageNum((prev) => prev + 1);
+        setLoading(false);
+      }
+    );
   };
 
   const fetchNextPageData = () => {
-    fetchDataFromApi(`/discover/${mediaType}?page=${pageNum}`, filters).then(
-      (res) => {
-        if (data?.results) {
-          setData({
-            ...data,
-            results: [...data?.results, ...res.results],
-          });
-        } else {
-          setData(res);
-        }
-        setPageNum((prev) => prev + 1);
+    fetchDataFromApi(
+      `/discover/${mediaType}?page=${pageNum}&api_key=${api_key}`,
+      filters
+    ).then((res) => {
+      if (data?.results) {
+        setData({
+          ...data,
+          results: [...data?.results, ...res.results],
+        });
+      } else {
+        setData(res);
       }
-    );
+      setPageNum((prev) => prev + 1);
+    });
   };
 
   useEffect(() => {
